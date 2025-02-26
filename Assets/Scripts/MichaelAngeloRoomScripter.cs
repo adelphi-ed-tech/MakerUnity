@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomScripter : MonoBehaviour
+public class MichaelAngeloRoomScripter : MonoBehaviour
 {
     private RoomManager roomManager;
     public Textures textures;
