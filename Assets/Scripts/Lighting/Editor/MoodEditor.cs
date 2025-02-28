@@ -13,7 +13,7 @@ public class MoodEditor : Editor
 
         if (Application.isPlaying && GUI.changed)
         {
-            LightingHelper.Instance.UpdateLightingData();
+            LightingHelper.Instance.UpdateLightingDataFromInspectorGuiChange();
         }
     }
 }

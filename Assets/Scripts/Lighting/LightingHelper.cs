@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LightingHelper : MonoBehaviour
 {
-    public Mood[] moods;
+    public List<Mood> moods;
 
     public static LightingHelper Instance;
 
@@ -80,7 +80,7 @@ public class LightingHelper : MonoBehaviour
 
     void SetBasicUniforms()
     {
-        for (int i = 0; i < moods.Length && i < 32; i++)
+        for (int i = 0; i < moods.Count && i < 32; i++)
         {
 	        ambientColors[i] = ColorToVec4(moods[i].ambientColor);
 	        specularColors[i] = ColorToVec4(moods[i].specularColor);
@@ -94,24 +94,28 @@ public class LightingHelper : MonoBehaviour
         Shader.SetGlobalVectorArray("_FogColors", fogColors);
     }
 
-    public void UpdateLightingData()
+    // This is only meant to be called at runtime when a mood changes in the inspector
+    // it's a fairly expensive operation since it resets all of the lighting data for every room
+    // note that it cannot actually change the mood associated with a room
+    // This is meant for easier iteration in the editor
+    public void UpdateLightingDataFromInspectorGuiChange()
     {
 	    SetBasicUniforms();
 	    
 	    // reposition lights
 	    foreach (Room room in roomManager.GetRoomList())
 	    {
-		    SpawnPointLights(room, (Moods)room.moodIndex);
+		    SpawnPointLights(room, room.mood);
 	    }
 	    
 	    // respawn particles
 	    foreach (Room room in roomManager.GetRoomList())
 	    {
-		    SpawnParticles(room, (Moods)room.moodIndex);
+		    SpawnParticles(room, room.mood);
 	    }
     }
 
-    public void SpawnPointLights(Room room, Moods mood)
+    public void SpawnPointLights(Room room, Mood mood)
     {
 	    // clear old lights
 		// might be more efficient to pool, we shall see...
@@ -125,15 +129,9 @@ public class LightingHelper : MonoBehaviour
 			}
 		}
 		
-	    Mood myMood = moods[(int)mood];
-	    
-	    float gridSize = Mathf.Sqrt(1f / myMood.lightSourceDensity);
+	    float gridSize = Mathf.Sqrt(1f / mood.lightSourceDensity);
 	    int numCols = Mathf.FloorToInt(room.size.x / gridSize);
 	    int numRows = Mathf.FloorToInt(room.size.y / gridSize);
-	    
-	    //add a couple rows and columns as a buffer of sorts to help with non rectangular rooms
-	    //numCols += numCols;
-	    //numRows += numRows;
 	    
 	    Vector3 gridStart = room.centerOfMass;
 	    gridStart -= room.xAxis * (((numCols - 1) / 2f) * gridSize);
@@ -155,10 +153,10 @@ public class LightingHelper : MonoBehaviour
 		    
 		    Light light = pointLight.AddComponent<Light>();
 		    light.type = LightType.Point;
-		    Color col = myMood.lightColor;
+		    Color col = mood.lightColor;
 		    col.a = room.roomIndex / 255f;
 		    light.color = col;
-		    light.range = myMood.lightRadius;
+		    light.range = mood.lightRadius;
 	    }
     }
 
@@ -167,7 +165,7 @@ public class LightingHelper : MonoBehaviour
 	    fogCam.Render();
     }
 
-    public void SpawnParticles(Room room, Moods mood)
+    public void SpawnParticles(Room room, Mood mood)
     {
 	    //remove previous particle system
 		for (int i = room.Ceiling.transform.childCount - 1; i >= 0; i--)
@@ -179,8 +177,7 @@ public class LightingHelper : MonoBehaviour
 			}
 		}
 
-	    Mood myMood = moods[(int)mood];
-		GameObject particlePrefab = myMood.particlePrefab;
+		GameObject particlePrefab = mood.particlePrefab;
 		if (particlePrefab == null)
 		{
 			return;
@@ -198,7 +195,7 @@ public class LightingHelper : MonoBehaviour
 		ParticleSystem ps = particleSystem.GetComponent<ParticleSystem>();
 		if (ps == null)
 		{
-			Debug.LogError("Please assign particle system to particlePrefab in Mood: " + myMood.name);
+			Debug.LogError("Please assign particle system to particlePrefab in Mood: " + mood.name);
 			Destroy(particleSystem);
 			return;
 		}
@@ -209,7 +206,47 @@ public class LightingHelper : MonoBehaviour
 		
 		ParticleSystem.EmissionModule emission = ps.emission;
 		float roomVolume = Mathf.Abs(boxSize.x * boxSize.y * boxSize.z);
-		float emissionRate = roomVolume * myMood.particleDensity;
+		float emissionRate = roomVolume * mood.particleDensity;
 		emission.rateOverTime = emissionRate;
+    }
+
+    public Mood CreateMood(Color specColor, float smoothness, Color ambientColor, float lightSourceDensity,
+	    Color lightColor, Color fogColor, GameObject particlePrefab, float particleDensity)
+    {
+	    if(moods.Count >= 32)
+	    {
+		    Debug.LogError("Cannot create more than 32 moods");
+		    return null;
+	    }
+	    
+	    Mood newMood = ScriptableObject.CreateInstance<Mood>();
+	    
+	    newMood.Setup(specColor, smoothness, ambientColor, lightSourceDensity, lightColor, 
+		    fogColor, particlePrefab, particleDensity);
+
+	    moods.Add(newMood);
+	    
+	    SetBasicUniforms();
+	    
+	    return newMood;
+    }
+
+    public int GetMoodIndex(Mood mood)
+    {
+	    for(int i = 0; i < moods.Count; i++)
+	    {
+		    if (moods[i] == mood)
+		    {
+			    return i;
+		    }
+	    }
+
+	    Debug.LogError("Error - mood not found in moods list");
+	    return -1;
+    }
+
+    public Mood GetMood(Moods mood)
+    {
+	    return moods[(int)mood];
     }
 }

@@ -17,6 +17,7 @@ public class Room : ScriptableObject
     private Renderer FloorRenderer;
     private List<Renderer> WallRenderers;
     private AudioSource AudioSource;
+    public Mood mood;
     public int moodIndex;
     public int roomIndex;
     
@@ -163,11 +164,29 @@ public class Room : ScriptableObject
         }
     }
 
+    //helper method that lets folks set mood by referencing the Moods enum
+    //this is expected to be the main entry point
     public void SetMood(LightingHelper.Moods mood)
     {
-        //LightingHelper.Instance.SetMood(this, mood);
-        moodIndex = (int)mood;
+        SetMood(LightingHelper.Instance.GetMood(mood));
+    }
+    
+    public void SetMood(Mood mood)
+    {
+        int moodIndex = LightingHelper.Instance.GetMoodIndex(mood);
+        SendMoodIndexToGpu(moodIndex);
         
+        LightingHelper.Instance.SpawnPointLights(this, mood);
+        LightingHelper.Instance.SpawnParticles(this, mood);
+        
+        //note that remaining effects like ambient light and fog are managed per mood
+        //ambient is automatic
+        //fog will be updated as long as the user calls LightingHelper.UpdateFog at the end of room setup
+    }
+    
+    private void SendMoodIndexToGpu(int index)
+    {
+        moodIndex = index;
         if (FloorRenderer != null)
         {
             FloorRenderer.material.SetInt("_MoodIndex", moodIndex);
@@ -183,10 +202,8 @@ public class Room : ScriptableObject
             wallRenderer.material.SetInt("_MoodIndex", moodIndex);
             wallRenderer.material.SetInt("_RoomIndex", roomIndex);
         }
-        
-        LightingHelper.Instance.SpawnPointLights(this, mood);
-        LightingHelper.Instance.SpawnParticles(this, mood);
     }
+
 
     // this method will help determine axis-aligned bounding box for the room
     // and will be used to place lights and other things

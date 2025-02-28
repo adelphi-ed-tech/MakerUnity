@@ -15811,6 +15811,7 @@ MonoBehaviour:
   roomManager: {fileID: 70514481}
   fogCam: {fileID: 361842038}
   fogMapShader: {fileID: 4800000, guid: 2d690831b60044378b7c09c0eb535923, type: 3}
+  randomizeMoods: 1
 --- !u!1 &2089093364 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4682594238620310129, guid: 80ed7ac95b6fe425f9d42bc3f0449085, type: 3}

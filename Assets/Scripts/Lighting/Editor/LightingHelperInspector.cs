@@ -14,7 +14,7 @@ public class LightingHelperInspector : Editor
         base.OnInspectorGUI();
         LightingHelper lightingHelper = (LightingHelper)target;
 
-        if (lightingHelper.moods.Length == 0 || lightingHelper.moods[0] == null)
+        if (lightingHelper.moods.Count == 0 || lightingHelper.moods[0] == null)
         {
             EditorGUILayout.HelpBox("No moods found. Please create a mood and assign it to LightingHelper.", MessageType.Error);
         }
@@ -22,42 +22,11 @@ public class LightingHelperInspector : Editor
         // detect changes in the mood list to regenerate moods enum
         if (GUI.changed)
         {
-            bool moodsChanged = false;
-            if (_prevMoods == null)
-            {
-                moodsChanged = true;
-
-            }
-            else if (_prevMoods.Length != lightingHelper.moods.Length)
-            {
-                moodsChanged = true;
-            }
-            else
-            {
-                for(int i = 0; i < lightingHelper.moods.Length; i++)
-                {
-                    if (lightingHelper.moods[i] != _prevMoods[i])
-                    {
-                        moodsChanged = true;
-                        break;
-                    }
-                }
-            }
-
-            if (moodsChanged)
-            {
-                UpdateMoodsEnum(lightingHelper.moods);
-                
-                _prevMoods = new Mood[lightingHelper.moods.Length];
-                for (int i = 0; i < lightingHelper.moods.Length; i++)
-                {
-                    _prevMoods[i] = lightingHelper.moods[i];
-                }
-            }
+            UpdateMoodsEnum(lightingHelper.moods);
         }
     }
 
-    private void UpdateMoodsEnum(Mood[] moods)
+    private void UpdateMoodsEnum(List<Mood> moods)
     {
         string path = Application.dataPath + "/Scripts/Lighting/LightingHelper.cs";
 
@@ -71,7 +40,7 @@ public class LightingHelperInspector : Editor
                 if(lines[i].Contains("#hook"))
                 {
                     string enumString = "\tpublic enum Moods\n\t{\n";
-                    for (int j = 0; j < moods.Length; j++)
+                    for (int j = 0; j < moods.Count; j++)
                     {
                         enumString += $"\t\t{moods[j].name},\n";
                     }
