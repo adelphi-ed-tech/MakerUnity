@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Moods = LightingHelper.Moods;
 
 public class RoomScripter : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class RoomScripter : MonoBehaviour
         Room403.SetCeilingTexture(textures.water);
         Room403.SetSoundEffect(sounds.talkingStudents);
         Room403.SpawnSpheres("red", 5);
+        Room403.SetMood(Moods.Misty);
 
 
         // Room 405
@@ -274,6 +276,9 @@ public class RoomScripter : MonoBehaviour
         Thrift.SetCeilingTexture(textures.ice);
         Thrift.SetSoundEffect(sounds.talkingStudents);
         Thrift.SpawnSpheres("green", 2);
+        
+        //update fog
+        LightingHelper.Instance.UpdateFog();
     }
 
 }

@@ -41,10 +41,17 @@ public class Room : ScriptableObject
         
         CalculateLocalBoundingBox();
 
-        // temp - set to a random mood on start
-        int numMoods = Enum.GetNames(typeof(Moods)).Length;
-        Moods randomMood = (Moods)UnityEngine.Random.Range(0, numMoods);
-        SetMood(randomMood);
+        if (LightingHelper.Instance.randomizeMoods)
+        {
+            // temp - set to a random mood on start
+            int numMoods = Enum.GetNames(typeof(Moods)).Length;
+            Moods randomMood = (Moods)UnityEngine.Random.Range(0, numMoods);
+            SetMood(randomMood);
+        }
+        else
+        {
+            SetMood(Moods.Default);
+        }
     }
 
     private void InitializeRenderers()

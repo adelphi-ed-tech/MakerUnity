@@ -19,6 +19,8 @@ public class LightingHelper : MonoBehaviour
     public Camera fogCam;
     public Shader fogMapShader;
     private RenderTexture _fogTexture;
+
+    public bool randomizeMoods;
     
     //#hook to auto-generate enum
 	public enum Moods
@@ -61,7 +63,6 @@ public class LightingHelper : MonoBehaviour
 		}
         
         SetBasicUniforms();
-        
         
         // init fog
         _fogTexture = fogCam.targetTexture;
