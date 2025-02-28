@@ -26,4 +26,7 @@ public class Mood : ScriptableObject
     
     [Header("Particles")]
     public GameObject particlePrefab;
+    [Range(0, 2f)]
+    [Tooltip("In units of emission / second / cube meter")]
+    public float particleDensity;
 }

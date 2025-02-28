@@ -103,9 +103,11 @@ public class LightingHelper : MonoBehaviour
 		    SpawnPointLights(room, (Moods)room.moodIndex);
 	    }
 	    
-	    //update fog
-	    
-	    //todo - set other colors if needed?
+	    // respawn particles
+	    foreach (Room room in roomManager.GetRoomList())
+	    {
+		    SpawnParticles(room, (Moods)room.moodIndex);
+	    }
     }
 
     public void SpawnPointLights(Room room, Moods mood)
@@ -183,9 +185,11 @@ public class LightingHelper : MonoBehaviour
 			return;
 		}
 
+		//room height is not specified. It could be calculated, but for now we can just guess / hardcode
+		float roomHeightGuess = 3f;
 		Vector3 min = room.origin;
 		Vector3 max = room.origin + room.xAxis * room.size.x + room.zAxis * room.size.y;
-		min.y = max.y - 3f; // not sure how high rooms are. Assuming 3
+		min.y = max.y - roomHeightGuess;
 		Vector3 center = (min + max) / 2f;
 		Quaternion rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
 
@@ -199,7 +203,12 @@ public class LightingHelper : MonoBehaviour
 		}
 		
 		ParticleSystem.ShapeModule shape = ps.shape;
-		Vector3 boxSize = max - min;
+		Vector3 boxSize = new Vector3(room.size.x, roomHeightGuess, room.size.y);
 		shape.scale = boxSize;
+		
+		ParticleSystem.EmissionModule emission = ps.emission;
+		float roomVolume = Mathf.Abs(boxSize.x * boxSize.y * boxSize.z);
+		float emissionRate = roomVolume * myMood.particleDensity;
+		emission.rateOverTime = emissionRate;
     }
 }
