@@ -23,5 +23,7 @@ public class Mood : ScriptableObject
 
     [Header("Volumetric fog")] 
     public Color fogColor;
-
+    
+    [Header("Particles")]
+    public GameObject particlePrefab;
 }

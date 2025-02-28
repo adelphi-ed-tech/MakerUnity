@@ -178,6 +178,7 @@ public class Room : ScriptableObject
         }
         
         LightingHelper.Instance.SpawnPointLights(this, mood);
+        LightingHelper.Instance.SpawnParticles(this, mood);
     }
 
     // this method will help determine axis-aligned bounding box for the room

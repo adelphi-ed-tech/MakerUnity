@@ -115,7 +115,11 @@ public class LightingHelper : MonoBehaviour
 		room.lightPosTemp.Clear();
 		for (int i = room.Ceiling.transform.childCount - 1; i >= 0; i--)
 		{
-			GameObject.Destroy(room.Ceiling.transform.GetChild(i).gameObject);
+			GameObject child = room.Ceiling.transform.GetChild(i).gameObject;
+			if (child.GetComponent<Light>() != null)
+			{
+				GameObject.Destroy(room.Ceiling.transform.GetChild(i).gameObject);
+			}
 		}
 		
 	    Mood myMood = moods[(int)mood];
@@ -158,5 +162,44 @@ public class LightingHelper : MonoBehaviour
     public void UpdateFog()
     {
 	    fogCam.Render();
+    }
+
+    public void SpawnParticles(Room room, Moods mood)
+    {
+	    //remove previous particle system
+		for (int i = room.Ceiling.transform.childCount - 1; i >= 0; i--)
+		{
+			GameObject child = room.Ceiling.transform.GetChild(i).gameObject;
+			if (child.GetComponent<ParticleSystem>() != null)
+			{
+				GameObject.Destroy(room.Ceiling.transform.GetChild(i).gameObject);
+			}
+		}
+
+	    Mood myMood = moods[(int)mood];
+		GameObject particlePrefab = myMood.particlePrefab;
+		if (particlePrefab == null)
+		{
+			return;
+		}
+
+		Vector3 min = room.origin;
+		Vector3 max = room.origin + room.xAxis * room.size.x + room.zAxis * room.size.y;
+		min.y = max.y - 3f; // not sure how high rooms are. Assuming 3
+		Vector3 center = (min + max) / 2f;
+		Quaternion rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
+
+		GameObject particleSystem = Instantiate(particlePrefab, center, rotation, room.Ceiling.transform);
+		ParticleSystem ps = particleSystem.GetComponent<ParticleSystem>();
+		if (ps == null)
+		{
+			Debug.LogError("Please assign particle system to particlePrefab in Mood: " + myMood.name);
+			Destroy(particleSystem);
+			return;
+		}
+		
+		ParticleSystem.ShapeModule shape = ps.shape;
+		Vector3 boxSize = max - min;
+		shape.scale = boxSize;
     }
 }
