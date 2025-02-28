@@ -42,12 +42,15 @@ public class PlayerCam : MonoBehaviour
         }
         else
         {
-            Vector3 pos = transform.position;
+            Vector3 pos = debugPos.position;
             pos.x += Input.GetAxisRaw("Horizontal") * Time.deltaTime * debugCamSpeed;
             pos.z += Input.GetAxisRaw("Vertical") * Time.deltaTime * debugCamSpeed;
-            transform.position = pos;
+            debugPos.position = pos;
 
-            transform.position += transform.forward * (Input.mouseScrollDelta.y * 5);
+            debugPos.position += transform.forward * (Input.mouseScrollDelta.y * 5);
+            
+            transform.position = debugPos.position;
+            transform.rotation = debugPos.rotation;
 
         }
 

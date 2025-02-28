@@ -61,7 +61,7 @@ Shader "Hidden/VolumetricFog"
                 {
                     return -1;
                 }
-                else if(worldPos.y < -1 || worldPos.y > 2)
+                else if(worldPos.y < -0.35 || worldPos.y > 2.34)
                 {
                     return -1;
                 }
