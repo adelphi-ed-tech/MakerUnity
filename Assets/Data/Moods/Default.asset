@@ -18,3 +18,4 @@ MonoBehaviour:
   lightSourceDensity: 0.076
   lightColor: {r: 1, g: 1, b: 1, a: 0}
   lightRadius: 8.65
+  fogColor: {r: 0, g: 0, b: 0, a: 0}

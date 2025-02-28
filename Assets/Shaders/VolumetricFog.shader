@@ -54,25 +54,25 @@ Shader "Hidden/VolumetricFog"
 
             float4 _FogBounds;
             
-            int getRoomCode(float3 worldPos)
+            int getMoodCode(float3 worldPos)
             {
                 float2 uv = (worldPos.xz - _FogBounds.xy) / _FogBounds.z;
                 if(uv.x < 0 || uv.x > 1 || uv.y < 0 || uv.y > 1)
                 {
                     return -1;
                 }
-                else if(worldPos.y < -0.35 || worldPos.y > 2.34)
+                else if(worldPos.y < -0.36 || worldPos.y > 2.4)
                 {
                     return -1;
                 }
                 else
                 {
-                    float roomCodeFrac = tex2Dlod(_FogMap, float4(uv, 0, 0)).r;
-                    if(roomCodeFrac >= 1)
+                    float modeCodeFrac = tex2Dlod(_FogMap, float4(uv, 0, 0)).r;
+                    if(modeCodeFrac >= 1)
                     {
                         return -1;
                     }
-                    return int(round(roomCodeFrac * 255));
+                    return int(round(modeCodeFrac * 255));
                 }
             }
             
@@ -85,26 +85,20 @@ Shader "Hidden/VolumetricFog"
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed noise = rand(i.uv + float2(_Time.z, _Time.z * 2));
                 noise = noise * 2 - 1;
-                //return noise;
-                //return noise;
 
                 float z = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
                 
                 float3 viewPos = i.rayDir * LinearEyeDepth(z);
 
                 float3 worldPos = mul(_InverseView, float4(viewPos, 1)).xyz;
-                int roomCode = getRoomCode(worldPos);
-                //return roomCode >= 0;
-                //return float(roomCode) / 255;
                 
                 float2 uv = (worldPos.xz - _FogBounds.xy) / _FogBounds.z;
-                //return float4(uv, 0, 1);
                 
                 float3 rayStart = _WorldSpaceCameraPos;
                 float3 rayEnd = worldPos;
                 float3 rayDir = normalize(rayEnd - rayStart);
 
-                float fog = 0;
+                float4 fog = 0;
                 float rayLength = length(rayEnd - rayStart);
                 float stepSize = rayLength / _NumSteps;
                 //offset ray a bit so we aren't starting at the camera position
@@ -114,15 +108,16 @@ Shader "Hidden/VolumetricFog"
                 {
                     float t = i / float(_NumSteps);
                     float3 samplePos = lerp(rayStart, rayEnd, t);//rayStart + rayDir * t;
-                    int rc = getRoomCode(samplePos);
+                    int mood = getMoodCode(samplePos);
 
-                    float fogdelta = rc >= 0 ? 1 : 0;
+                    //float isFog = rc >= 0 ? 1 : 0;
+                    float fogdelta = mood >= 0 ? 1 : 0;
                     //temp assume there's fog everywhere
-                    fog += 0.05 * fogdelta * stepSize;
+                    float4 fogCol = _FogColors[mood];
+                    fog += fogCol * 0.5 * fogdelta * stepSize;
                 }
                 fog = saturate(fog);
                 return fog;
-                //return lerp(col, 0.5, fog);
             }
             ENDCG
         }
