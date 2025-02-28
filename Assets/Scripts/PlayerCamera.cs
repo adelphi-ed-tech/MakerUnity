@@ -45,6 +45,8 @@ public class PlayerCam : MonoBehaviour
             Vector3 pos = debugPos.position;
             pos.x += Input.GetAxisRaw("Horizontal") * Time.deltaTime * debugCamSpeed;
             pos.z += Input.GetAxisRaw("Vertical") * Time.deltaTime * debugCamSpeed;
+            pos.y += Input.GetKey(KeyCode.E) ? Time.deltaTime * debugCamSpeed : 0;
+            pos.y -= Input.GetKey(KeyCode.Q) ? Time.deltaTime * debugCamSpeed : 0;
             debugPos.position = pos;
 
             debugPos.position += transform.forward * (Input.mouseScrollDelta.y * 5);

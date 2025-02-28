@@ -157,7 +157,7 @@ Shader "Hidden/VolumetricFog"
             {
                 fixed4 curFog = tex2D(_MainTex, i.uv);
                 fixed4 fog = tex2D(_FogTexture, i.uv);
-                return lerp(curFog, fog, 0.8);
+                return lerp(curFog, fog, 0.7);
             }
             ENDCG
         }
