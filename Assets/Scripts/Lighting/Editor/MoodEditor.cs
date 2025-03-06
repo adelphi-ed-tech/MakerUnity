@@ -9,7 +9,6 @@ public class MoodEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        Mood mood = (Mood)target;
 
         if (Application.isPlaying && GUI.changed)
         {

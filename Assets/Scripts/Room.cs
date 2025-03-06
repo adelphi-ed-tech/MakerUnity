@@ -173,6 +173,7 @@ public class Room : ScriptableObject
     
     public void SetMood(Mood mood)
     {
+        this.mood = mood;
         int moodIndex = LightingHelper.Instance.GetMoodIndex(mood);
         SendMoodIndexToGpu(moodIndex);
         
