@@ -19,3 +19,5 @@ MonoBehaviour:
   lightColor: {r: 0, g: 0.98080873, b: 1, a: 0}
   lightRadius: 7.86
   fogColor: {r: 0.19081523, g: 0.3895689, b: 0.6037736, a: 0.09803922}
+  particlePrefab: {fileID: 2612838236286074194, guid: 5fd54d2eb41f84ab3a7e94b9bf164dbf, type: 3}
+  particleDensity: 0.22
