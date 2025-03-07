@@ -3,10 +3,12 @@ Shader "Unlit/Embers"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _Brightness ("Brightness", Range(0, 20)) = 1
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "IgnoreProjector"="True" "PreviewType"="Plane" "PerformanceChecks"="False" }
+        Tags { "RenderType"="Opaque" "IgnoreProjector"="True" "PreviewType"="Plane" "PerformanceChecks"="False"
+            "Queue"="Transparent" }
         //Blend One One
         Blend SrcAlpha OneMinusSrcAlpha
         LOD 100
@@ -39,6 +41,7 @@ Shader "Unlit/Embers"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            float _Brightness;
 
             v2f vert (appdata v)
             {
@@ -59,14 +62,16 @@ Shader "Unlit/Embers"
                 fixed4 col = i.color;
                 col.a *= alpha;
 
-                float distToCam = length(i.worldPos - _WorldSpaceCameraPos);
-                col.a *= smoothstep(0.5, 3, distToCam);
+                //float distToCam = length(i.worldPos - _WorldSpaceCameraPos);
+                //col.a *= smoothstep(0.5, 3, distToCam);
 
                 float glow = 1 - col.a;
-                glow = pow(glow, 0.2);
-                col.rgb = lerp(float3(1,1,1), col.rgb, glow);
-                col.a *= 4;
+                //glow = pow(glow, 0.2);
+                //col.rgb = lerp(float3(1,1,1), col.rgb, glow);
+                //col.a *= 4;
 
+                col.rgb *= _Brightness;
+                
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;

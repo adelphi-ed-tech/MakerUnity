@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specularColor: {r: 1, g: 1, b: 1, a: 0}
   smoothness: 0.518
-  ambientColor: {r: 0.47058824, g: 0.03716931, b: 0, a: 0}
+  ambientColor: {r: 0.7830189, g: 0.05872642, b: 0, a: 0}
   lightSourceDensity: 0.051
-  lightColor: {r: 1, g: 0.4713461, b: 0, a: 0}
-  lightRadius: 3.91
+  lightColor: {r: 1, g: 0.23511335, b: 0, a: 0}
+  lightRadius: 12.76
   fogColor: {r: 0.024, g: 0.024, b: 0.024, a: 0.08627451}
   particlePrefab: {fileID: 1780214465081721926, guid: a8d02ee42c65d4260b422e205f34ef25, type: 3}
-  particleDensity: 0.03
+  particleDensity: 0.1
