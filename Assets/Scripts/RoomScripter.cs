@@ -135,6 +135,7 @@ public class RoomScripter : MonoBehaviour
         Room427.SetAllWallsTexture(textures.wood);
         Room427.SetFloorTexture(textures.lava);
         Room427.SetCeilingTexture(textures.sand);
+        Room427.SetMood(Moods.Default);
 
 
         // Room 430
@@ -149,6 +150,7 @@ public class RoomScripter : MonoBehaviour
         Room431.SetAllWallsTexture(textures.wood);
         Room431.SetFloorTexture(textures.lava);
         Room431.SetCeilingTexture(textures.sand);
+        Room431.SetMood(Moods.Misty);
 
 
         // Room 432
@@ -163,6 +165,7 @@ public class RoomScripter : MonoBehaviour
         Room433.SetAllWallsTexture(textures.wood);
         Room433.SetFloorTexture(textures.lava);
         Room433.SetCeilingTexture(textures.sand);
+        Room433.SetMood(Moods.Emblazen);
 
 
         // Room 434
@@ -177,6 +180,7 @@ public class RoomScripter : MonoBehaviour
         Room435.SetAllWallsTexture(textures.wood);
         Room435.SetFloorTexture(textures.lava);
         Room435.SetCeilingTexture(textures.sand);
+        Room435.SetMood(Moods.Darkness);
 
 
         // Room 436
@@ -191,6 +195,7 @@ public class RoomScripter : MonoBehaviour
         Room439.SetAllWallsTexture(textures.wood);
         Room439.SetFloorTexture(textures.lava);
         Room439.SetCeilingTexture(textures.sand);
+        Room439.SetMood(Moods.Cozy);
 
 
         // Room 441
