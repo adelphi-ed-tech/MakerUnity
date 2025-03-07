@@ -28,6 +28,7 @@ public class LightingHelper : MonoBehaviour
 		Default,
 		Misty,
 		Emblazen,
+		Darkness,
 	}
 	//#endhook
     

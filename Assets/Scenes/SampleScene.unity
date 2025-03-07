@@ -6939,7 +6939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: d6edbb9b2d14c4037b8644fc39251d8a, type: 3}
-  numSteps: 4
+  numSteps: 6
 --- !u!1 &971346630 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4819223349682164798, guid: 80ed7ac95b6fe425f9d42bc3f0449085, type: 3}
@@ -15810,6 +15810,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1812144a82a3c43f7be8937af4b2b183, type: 2}
   - {fileID: 11400000, guid: 298d247c3f57c42cdbc27a2f2e6d30a2, type: 2}
   - {fileID: 11400000, guid: 5c8806804e82e4440bdfc4977d3edf3c, type: 2}
+  - {fileID: 11400000, guid: c1736646b3c4647d1918a4a721c20bd8, type: 2}
   roomManager: {fileID: 70514481}
   fogCam: {fileID: 361842038}
   fogMapShader: {fileID: 4800000, guid: 2d690831b60044378b7c09c0eb535923, type: 3}

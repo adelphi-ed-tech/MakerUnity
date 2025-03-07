@@ -62,9 +62,6 @@ Shader "Unlit/Embers"
                 fixed4 col = i.color;
                 col.a *= alpha;
 
-                //float distToCam = length(i.worldPos - _WorldSpaceCameraPos);
-                //col.a *= smoothstep(0.5, 3, distToCam);
-
                 float glow = 1 - col.a;
                 //glow = pow(glow, 0.2);
                 //col.rgb = lerp(float3(1,1,1), col.rgb, glow);

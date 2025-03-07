@@ -99,6 +99,7 @@ Shader "Hidden/VolumetricFog"
                 float3 rayDir = normalize(rayEnd - rayStart);
 
                 float4 fog = 0;
+                float fogSum = 0;
                 float rayLength = length(rayEnd - rayStart);
                 float stepSize = rayLength / _NumSteps;
                 //offset ray a bit so we aren't starting at the camera position
@@ -114,7 +115,14 @@ Shader "Hidden/VolumetricFog"
                     float fogdelta = mood >= 0 ? 1 : 0;
                     //temp assume there's fog everywhere
                     float4 fogCol = _FogColors[mood];
-                    fog += fogCol * 0.5 * fogdelta * stepSize;
+                    fog.a += 0.5 * fogdelta * stepSize * fogCol.a;
+                    fog.rgb += fogCol.rgb * fogdelta;
+                    fogSum+= fogdelta;
+                    //fog += fogCol * 0.5 * fogdelta * stepSize;
+                }
+                if(fogSum > 0)
+                {
+                    fog.rgb /= fogSum;
                 }
                 fog = saturate(fog);
                 return fog;
