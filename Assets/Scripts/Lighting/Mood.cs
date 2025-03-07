@@ -30,12 +30,13 @@ public class Mood : ScriptableObject
     [Tooltip("In units of emission / second / cube meter")]
     public float particleDensity;
 
-    public void Setup(Color specColor, float smoothness, Color ambientColor, float lightSourceDensity,
+    public void Setup(Color specColor, float smoothness, Color ambientColor, float lightSourceDensity, float lightRadius,
           Color lightColor, Color fogColor, GameObject particlePrefab, float particleDensity)
     {
         this.specularColor = specColor;
         this.smoothness = smoothness;
         this.ambientColor = ambientColor;
+        this.lightRadius = lightRadius;
         this.lightSourceDensity = lightSourceDensity;
         this.lightColor = lightColor;
         this.fogColor = fogColor;
