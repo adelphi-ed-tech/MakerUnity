@@ -13,13 +13,14 @@ public class Mood : ScriptableObject
     [Header("Ambient lighting")]
     public Color ambientColor;
     
-    [Header("Point lights")]
+    [Header("Light Sources")]
     [Tooltip("Units are number of point lights / square meter")]
     [Range(0, 0.5f)]
     public float lightSourceDensity;
     public Color lightColor;
     [Range(0, 20f)]
     public float lightRadius;
+    public bool castShadows;
 
     [Header("Volumetric fog")] 
     public Color fogColor;

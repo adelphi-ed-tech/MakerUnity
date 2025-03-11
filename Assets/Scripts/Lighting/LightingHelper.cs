@@ -160,6 +160,7 @@ public class LightingHelper : MonoBehaviour
 		    col.a = room.roomIndex / 255f;
 		    light.color = col;
 		    light.range = mood.lightRadius;
+		    light.shadows = LightShadows.None;
 	    }
     }
 

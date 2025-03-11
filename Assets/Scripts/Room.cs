@@ -53,6 +53,12 @@ public class Room : ScriptableObject
         {
             SetMood(Moods.Default);
         }
+
+        if (Collider != null)
+        {
+            ShadowTrigger st = Collider.gameObject.AddComponent<ShadowTrigger>();
+            st.room = this;
+        }
     }
 
     private void InitializeRenderers()
