@@ -19,6 +19,7 @@ MonoBehaviour:
   lightColor: {r: 1, g: 1, b: 1, a: 0}
   lightRadius: 8.65
   castShadows: 1
+  lightFixture: {fileID: 7603295526964027914, guid: a48232a963e524953a19a2487f29efa6, type: 3}
   fogColor: {r: 0, g: 0, b: 0, a: 0}
   particlePrefab: {fileID: 0}
   particleDensity: 0.22

@@ -148,10 +148,15 @@ public class LightingHelper : MonoBehaviour
 		    }
 	    }
 
+	    Material emissionMat = new Material(Shader.Find("Standard"));
+	    emissionMat.EnableKeyword("_EMISSION");
+	    emissionMat.SetColor("_EmissionColor", mood.lightColor);
+
+	    float lightOffsetFromCeilingAmount = -0.1f;
 	    foreach (Vector3 pos in room.lightPosTemp)
 	    {
 		    GameObject pointLight = new GameObject("Point Light");
-		    pointLight.transform.position = pos + Vector3.down * 0.5f;
+		    pointLight.transform.position = pos + Vector3.down * lightOffsetFromCeilingAmount;
 		    pointLight.transform.SetParent(room.Ceiling.transform);
 		    
 		    Light light = pointLight.AddComponent<Light>();
@@ -161,6 +166,17 @@ public class LightingHelper : MonoBehaviour
 		    light.color = col;
 		    light.range = mood.lightRadius;
 		    light.shadows = LightShadows.None;
+		    
+		    //mesh
+		    if (mood.lightFixture != null)
+		    {
+				GameObject fixture = Instantiate(mood.lightFixture, pointLight.transform);
+				fixture.transform.position = pointLight.transform.position + Vector3.up * lightOffsetFromCeilingAmount;
+				MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
+				Material[] mats = renderer.materials;
+				mats[^1] = emissionMat;
+				renderer.materials = mats;
+		    }
 	    }
     }
 

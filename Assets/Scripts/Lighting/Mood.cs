@@ -21,6 +21,7 @@ public class Mood : ScriptableObject
     [Range(0, 20f)]
     public float lightRadius;
     public bool castShadows;
+    public GameObject lightFixture;
 
     [Header("Volumetric fog")] 
     public Color fogColor;
