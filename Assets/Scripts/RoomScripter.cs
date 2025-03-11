@@ -173,6 +173,7 @@ public class RoomScripter : MonoBehaviour
         Room434.SetAllWallsTexture(textures.wood);
         Room434.SetFloorTexture(textures.lava);
         Room434.SetCeilingTexture(textures.sand);
+        Room434.SetMood(Moods.Flourescent);
 
 
         // Room 435
