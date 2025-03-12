@@ -6,6 +6,7 @@ using UnityEngine;
 public class LightingHelper : MonoBehaviour
 {
     public List<Mood> moods;
+    public List<CustomLight> lights;
 
     public static LightingHelper Instance;
 
@@ -22,7 +23,7 @@ public class LightingHelper : MonoBehaviour
 
     public bool randomizeMoods;
     
-    //#hook to auto-generate enum
+    //#mood hook to auto-generate enum
 	public enum Moods
 	{
 		Default,
@@ -32,7 +33,14 @@ public class LightingHelper : MonoBehaviour
 		Cozy,
 		Flourescent,
 	}
-	//#endhook
+	//#endmood
+	
+    //#light hook to auto-generate enum
+	public enum Lights
+	{
+		Spot,
+	}
+	//#endlight
     
     void Awake()
     {
