@@ -41,6 +41,8 @@ public class LightingHelper : MonoBehaviour
 	public enum Lights
 	{
 		Spot,
+		Flourescent,
+		Recessed,
 	}
 	//#endlight
 

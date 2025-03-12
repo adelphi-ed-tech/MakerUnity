@@ -15870,6 +15870,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 98567d96273ac4348aec6aeb734d3d0b, type: 2}
   lights:
   - {fileID: 11400000, guid: f802d75b8773246e6ae3334e35a55ca4, type: 2}
+  - {fileID: 11400000, guid: 491675dc5b37645899cfa6dc6873cf46, type: 2}
+  - {fileID: 11400000, guid: f82a0b7123bbd4cbdb0df048bdeb8488, type: 2}
   roomManager: {fileID: 70514481}
   fogCam: {fileID: 361842038}
   fogMapShader: {fileID: 4800000, guid: 2d690831b60044378b7c09c0eb535923, type: 3}
