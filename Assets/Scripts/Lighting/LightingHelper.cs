@@ -208,12 +208,16 @@ public class LightingHelper : MonoBehaviour
 	    switch (position)
 	    {
 		    case LightPositions.North:
+			    pos = room.centerOfMass + room.zAxis * room.size.y * 0.25f;
 			    break;
 		    case LightPositions.East:
+			    pos = room.centerOfMass + room.xAxis * room.size.x * 0.25f;
 			    break;
 		    case LightPositions.South:
+			    pos = room.centerOfMass - room.zAxis * room.size.y * 0.25f;
 			    break;
 		    case LightPositions.West:
+			    pos = room.centerOfMass - room.xAxis * room.size.x * 0.25f;
 			    break;
 	    }
 	    

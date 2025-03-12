@@ -200,6 +200,10 @@ public class RoomScripter : MonoBehaviour
         Room439.SetCeilingTexture(textures.sand);
         Room439.SetMood(Moods.Cozy);
         Room439.AddLight(Lights.Spot, LightPositions.Center);
+        Room439.AddLight(Lights.Spot, LightPositions.North);
+        Room439.AddLight(Lights.Spot, LightPositions.East);
+        Room439.AddLight(Lights.Spot, LightPositions.South);
+        Room439.AddLight(Lights.Spot, LightPositions.West);
 
 
         // Room 441
