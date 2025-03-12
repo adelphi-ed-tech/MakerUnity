@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67a7b4800156a4700bf28c271339eeb9, type: 3}
   m_Name: Cozy
   m_EditorClassIdentifier: 
-  specularColor: {r: 1, g: 0.809987, b: 0.25, a: 0}
-  smoothness: 0.455
-  ambientColor: {r: 0.22700001, g: 0.16824707, b: 0.11928629, a: 0}
-  lightSourceDensity: 0.092
+  specularColor: {r: 0.617, g: 0.5008588, b: 0.1548549, a: 0}
+  smoothness: 0.178
+  ambientColor: {r: 0.085, g: 0.06301725, b: 0.04396552, a: 0}
+  lightSourceDensity: 0.045
   lightColor: {r: 1, g: 0.7420109, b: 0.3254717, a: 0}
-  lightRadius: 4.09
+  lightRadius: 3.65
   castShadows: 1
   lightFixture: {fileID: 0}
   fogColor: {r: 0.3962264, g: 0.29480976, b: 0.21493414, a: 0.02745098}
