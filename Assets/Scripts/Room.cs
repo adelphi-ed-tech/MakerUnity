@@ -28,6 +28,7 @@ public class Room : ScriptableObject
     public Vector2 size;
     public Vector3 centerOfMass;
     public List<Vector3> lightPosTemp = new();
+    public Dictionary<LightingHelper.LightPositions, LightingHelper.Lights> customLights = new();
 
     public void Setup(GameObject floor, GameObject ceiling, List<GameObject> walls, GameObject collider, int index)
     {
@@ -213,7 +214,15 @@ public class Room : ScriptableObject
 
     public void AddLight(LightingHelper.Lights lightType, LightingHelper.LightPositions position)
     {
-        LightingHelper.Instance.AddLight(this, lightType, position);
+        if (!customLights.ContainsKey(position))
+        {
+            customLights.Add(position, lightType);
+            LightingHelper.Instance.AddLight(this, lightType, position);
+        }
+        else
+        {
+            Debug.LogError("Cannot add two lights in same position for a single room");
+        }
     }
 
 

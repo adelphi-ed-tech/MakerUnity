@@ -199,6 +199,11 @@ public class LightingHelper : MonoBehaviour
 				renderer.materials = mats;
 		    }
 	    }
+
+	    foreach (LightPositions pos in room.customLights.Keys)
+	    {
+		    AddLight(room, room.customLights[pos], pos);
+	    }
     }
 
     public void AddLight(Room room, Lights lightType, LightPositions position)
