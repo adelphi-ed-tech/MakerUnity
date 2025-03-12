@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Moods = LightingHelper.Moods;
+using Lights = LightingHelper.Lights;
+using LightPositions = LightingHelper.LightPositions;
 
 public class RoomScripter : MonoBehaviour
 {
@@ -197,6 +199,7 @@ public class RoomScripter : MonoBehaviour
         Room439.SetFloorTexture(textures.lava);
         Room439.SetCeilingTexture(textures.sand);
         Room439.SetMood(Moods.Cozy);
+        Room439.AddLight(Lights.Spot, LightPositions.Center);
 
 
         // Room 441

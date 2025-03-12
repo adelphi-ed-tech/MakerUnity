@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Cozy
   m_EditorClassIdentifier: 
   specularColor: {r: 1, g: 0.809987, b: 0.25, a: 0}
-  smoothness: 0.674
-  ambientColor: {r: 1, g: 0.7392569, b: 0.5235849, a: 0}
+  smoothness: 0.455
+  ambientColor: {r: 0.22700001, g: 0.16824707, b: 0.11928629, a: 0}
   lightSourceDensity: 0.092
   lightColor: {r: 1, g: 0.7420109, b: 0.3254717, a: 0}
   lightRadius: 4.09

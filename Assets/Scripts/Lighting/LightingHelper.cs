@@ -23,6 +23,8 @@ public class LightingHelper : MonoBehaviour
 
     public bool randomizeMoods;
     
+	private const float lightOffsetFromCeilingAmount = -0.1f;
+    
     //#mood hook to auto-generate enum
 	public enum Moods
 	{
@@ -41,6 +43,15 @@ public class LightingHelper : MonoBehaviour
 		Spot,
 	}
 	//#endlight
+
+	public enum LightPositions
+	{
+		Center,
+		North,
+		South,
+		East,
+		West
+	}
     
     void Awake()
     {
@@ -161,7 +172,6 @@ public class LightingHelper : MonoBehaviour
 	    emissionMat.EnableKeyword("_EMISSION");
 	    emissionMat.SetColor("_EmissionColor", mood.lightColor);
 
-	    float lightOffsetFromCeilingAmount = -0.1f;
 	    foreach (Vector3 pos in room.lightPosTemp)
 	    {
 		    GameObject pointLight = new GameObject("Point Light");
@@ -187,6 +197,60 @@ public class LightingHelper : MonoBehaviour
 				renderer.materials = mats;
 		    }
 	    }
+    }
+
+    public void AddLight(Room room, Lights lightType, LightPositions position)
+    {
+	    CustomLight lightData = lights[(int)lightType];
+	    
+	    Vector3 pos = room.centerOfMass;
+
+	    switch (position)
+	    {
+		    case LightPositions.North:
+			    break;
+		    case LightPositions.East:
+			    break;
+		    case LightPositions.South:
+			    break;
+		    case LightPositions.West:
+			    break;
+	    }
+	    
+		GameObject customLight = new GameObject("Custom light");
+		customLight.transform.position = pos + Vector3.down * lightOffsetFromCeilingAmount;
+		customLight.transform.SetParent(room.Ceiling.transform);
+		customLight.transform.forward = Vector3.down;
+		
+		Light light = customLight.AddComponent<Light>();
+		light.type = lightData.type;
+		switch (light.type)
+		{
+			case LightType.Spot:
+				light.spotAngle = lightData.spotAngle;
+				break;
+		}
+		Color col = lightData.color;
+		col.a = room.roomIndex / 255f;
+		light.color = col;
+		light.range = lightData.range;
+		light.shadows = LightShadows.None;
+		
+		//mesh
+		if (lightData.fixture != null)
+		{
+			Material emissionMat = new Material(Shader.Find("Standard"));
+			emissionMat.EnableKeyword("_EMISSION");
+			emissionMat.SetColor("_EmissionColor", lightData.color);
+	    
+			GameObject fixture = Instantiate(lightData.fixture, customLight.transform);
+			fixture.transform.position = customLight.transform.position + Vector3.up * lightOffsetFromCeilingAmount;
+			fixture.transform.rotation = Quaternion.identity;
+			MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
+			Material[] mats = renderer.materials;
+			mats[^1] = emissionMat;
+			renderer.materials = mats;
+		}
     }
 
     public void UpdateFog()

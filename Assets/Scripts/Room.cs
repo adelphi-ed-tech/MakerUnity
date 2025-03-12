@@ -211,6 +211,11 @@ public class Room : ScriptableObject
         }
     }
 
+    public void AddLight(LightingHelper.Lights lightType, LightingHelper.LightPositions position)
+    {
+        LightingHelper.Instance.AddLight(this, lightType, position);
+    }
+
 
     // this method will help determine axis-aligned bounding box for the room
     // and will be used to place lights and other things

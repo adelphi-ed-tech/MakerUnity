@@ -8,4 +8,7 @@ public class CustomLight : ScriptableObject
     public Color color;
     public float range;
     public bool castsShadows;
+    [Header("Spot light only")] 
+    [Range(0f, 180f)]
+    public float spotAngle;
 }
