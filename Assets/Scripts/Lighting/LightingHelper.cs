@@ -323,7 +323,7 @@ public class LightingHelper : MonoBehaviour
     }
 
     public Mood CreateMood(Color specColor, float smoothness, Color ambientColor, float lightSourceDensity, float lightRadius,
-	    Color lightColor, Color fogColor, GameObject particlePrefab, float particleDensity)
+	    Color lightColor, Color fogColor, GameObject particlePrefab, float particleDensity, bool castShadows)
     {
 	    if(moods.Count >= 32)
 	    {
@@ -334,7 +334,7 @@ public class LightingHelper : MonoBehaviour
 	    Mood newMood = ScriptableObject.CreateInstance<Mood>();
 	    
 	    newMood.Setup(specColor, smoothness, ambientColor, lightSourceDensity, lightRadius, lightColor,
-		    fogColor, particlePrefab, particleDensity);
+		    fogColor, particlePrefab, particleDensity, castShadows);
 
 	    moods.Add(newMood);
 	    

@@ -33,7 +33,7 @@ public class Mood : ScriptableObject
     public float particleDensity;
 
     public void Setup(Color specColor, float smoothness, Color ambientColor, float lightSourceDensity, float lightRadius,
-          Color lightColor, Color fogColor, GameObject particlePrefab, float particleDensity)
+          Color lightColor, Color fogColor, GameObject particlePrefab, float particleDensity, bool castShadows)
     {
         this.specularColor = specColor;
         this.smoothness = smoothness;
@@ -44,5 +44,6 @@ public class Mood : ScriptableObject
         this.fogColor = fogColor;
         this.particlePrefab = particlePrefab;
         this.particleDensity = particleDensity;
+        this.castShadows = castShadows;
     }
 }

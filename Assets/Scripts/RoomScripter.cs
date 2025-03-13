@@ -32,7 +32,7 @@ public class RoomScripter : MonoBehaviour
         Room405.SetFloorTexture(textures.grass);
         Room405.SetCeilingTexture(textures.water);
         Mood newMood = LightingHelper.Instance.CreateMood(Color.red, 1f, Color.magenta, 0.5f, 5f, Color.yellow,
-            new Color(0.5f, 0.5f, 0.5f, 0.1f), null, 0);
+            new Color(0.5f, 0.5f, 0.5f, 0.1f), null, 0, true);
         Room405.SetMood(newMood);
 
         // Room 406
