@@ -179,6 +179,7 @@ public class LightingHelper : MonoBehaviour
 	    {
 		    GameObject pointLight = new GameObject("Point Light");
 		    pointLight.transform.position = pos + Vector3.down * lightOffsetFromCeilingAmount;
+		    pointLight.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
 		    pointLight.transform.SetParent(room.Ceiling.transform);
 		    
 		    Light light = pointLight.AddComponent<Light>();
@@ -194,6 +195,7 @@ public class LightingHelper : MonoBehaviour
 		    {
 				GameObject fixture = Instantiate(mood.lightFixture, pointLight.transform);
 				fixture.transform.position = pointLight.transform.position + Vector3.up * lightOffsetFromCeilingAmount;
+				fixture.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
 				MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
 				Material[] mats = renderer.materials;
 				mats[^1] = emissionMat;
@@ -232,6 +234,7 @@ public class LightingHelper : MonoBehaviour
 		GameObject customLight = new GameObject("Custom light");
 		float customLightOffset = lightOffsetFromCeilingAmount + lightData.verticalOffsetFromCeiling;
 		customLight.transform.position = pos + Vector3.down * customLightOffset;
+		customLight.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
 		customLight.transform.SetParent(room.Ceiling.transform);
 		customLight.transform.forward = Vector3.down;
 		
@@ -258,7 +261,6 @@ public class LightingHelper : MonoBehaviour
 	    
 			GameObject fixture = Instantiate(lightData.fixture);
 			fixture.transform.position = customLight.transform.position + Vector3.up * customLightOffset;
-			fixture.transform.rotation = Quaternion.identity;
 			fixture.transform.SetParent(customLight.transform);
 			MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
 			Material[] mats = renderer.materials;
