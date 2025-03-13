@@ -43,6 +43,7 @@ public class LightingHelper : MonoBehaviour
 		Spot,
 		Flourescent,
 		Recessed,
+		Disco,
 	}
 	//#endlight
 
@@ -229,7 +230,8 @@ public class LightingHelper : MonoBehaviour
 	    }
 	    
 		GameObject customLight = new GameObject("Custom light");
-		customLight.transform.position = pos + Vector3.down * lightOffsetFromCeilingAmount;
+		float customLightOffset = lightOffsetFromCeilingAmount + lightData.verticalOffsetFromCeiling;
+		customLight.transform.position = pos + Vector3.down * customLightOffset;
 		customLight.transform.SetParent(room.Ceiling.transform);
 		customLight.transform.forward = Vector3.down;
 		
@@ -254,13 +256,19 @@ public class LightingHelper : MonoBehaviour
 			emissionMat.EnableKeyword("_EMISSION");
 			emissionMat.SetColor("_EmissionColor", lightData.color);
 	    
-			GameObject fixture = Instantiate(lightData.fixture, customLight.transform);
-			fixture.transform.position = customLight.transform.position + Vector3.up * lightOffsetFromCeilingAmount;
+			GameObject fixture = Instantiate(lightData.fixture);
+			fixture.transform.position = customLight.transform.position + Vector3.up * customLightOffset;
 			fixture.transform.rotation = Quaternion.identity;
+			fixture.transform.SetParent(customLight.transform);
 			MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
 			Material[] mats = renderer.materials;
 			mats[^1] = emissionMat;
 			renderer.materials = mats;
+
+			if (light.type == LightType.Point && lightData.pointCookie != null)
+			{
+				light.cookie = lightData.pointCookie;
+			}
 		}
     }
 

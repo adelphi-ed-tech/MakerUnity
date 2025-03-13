@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0424d58298d8d485186defeecdd8d8f4, type: 3}
-  m_Name: Spot
+  m_Name: Disco
   m_EditorClassIdentifier: 
-  fixture: {fileID: 1466352844662948180, guid: 4f2336c27cf9d4eb79cd8280abcc19e1, type: 3}
-  type: 0
+  fixture: {fileID: 3767422935404173815, guid: b185e091eaa4a4669a7a59865e1744e2, type: 3}
+  type: 2
   color: {r: 1, g: 1, b: 1, a: 0}
   range: 15
-  castsShadows: 1
+  castsShadows: 0
+  verticalOffsetFromCeiling: 0.5
   spotAngle: 100.5
+  pointCookie: {fileID: 8900000, guid: 9c77aa1c443d344d0b982a97d4f0f94a, type: 3}

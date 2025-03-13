@@ -8,7 +8,10 @@ public class CustomLight : ScriptableObject
     public Color color;
     public float range;
     public bool castsShadows;
+    public float verticalOffsetFromCeiling;
     [Header("Spot light only")] 
     [Range(0f, 180f)]
     public float spotAngle;
+    [Header("Point light only")] 
+    public Texture pointCookie;
 }
