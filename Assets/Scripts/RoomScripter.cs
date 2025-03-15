@@ -204,6 +204,7 @@ public class RoomScripter : MonoBehaviour
         Room439.AddLight(Lights.Spot, LightPositions.East);
         Room439.AddLight(Lights.Spot, LightPositions.South);
         Room439.AddLight(Lights.Spot, LightPositions.West);
+        Room439.AddLight(Lights.FloorLamp, LightPositions.NorthWest);
 
 
         // Room 441

@@ -46,6 +46,7 @@ public class LightingHelper : MonoBehaviour
 		Flourescent,
 		Recessed,
 		Disco,
+		FloorLamp,
 	}
 	//#endlight
 
@@ -55,7 +56,11 @@ public class LightingHelper : MonoBehaviour
 		North,
 		South,
 		East,
-		West
+		West,
+		NorthEast,
+		NorthWest,
+		SouthEast,
+		SouthWest,
 	}
     
     void Awake()
@@ -200,6 +205,18 @@ public class LightingHelper : MonoBehaviour
 		    case LightPositions.West:
 			    pos = room.centerOfMass - room.xAxis * (room.size.x * 0.25f);
 			    break;
+		    case LightPositions.NorthEast:
+			    pos = room.centerOfMass + room.zAxis * (room.size.y * 0.35f) + room.xAxis * (room.size.x * 0.35f);
+			    break;
+		    case LightPositions.SouthEast:
+			    pos = room.centerOfMass - room.zAxis * (room.size.y * 0.35f) + room.xAxis * (room.size.x * 0.35f);
+			    break;
+		    case LightPositions.SouthWest:
+			    pos = room.centerOfMass - room.zAxis * (room.size.y * 0.35f) - room.xAxis * (room.size.x * 0.35f);
+			    break;
+		    case LightPositions.NorthWest:
+			    pos = room.centerOfMass + room.zAxis * (room.size.y * 0.35f) - room.xAxis * (room.size.x * 0.35f);
+			    break;
 	    }
 		
 	    AddLightSourceAtPosition(room, lightData.fixture, lightData.color, lightData.range, pos, lightData);
@@ -211,38 +228,57 @@ public class LightingHelper : MonoBehaviour
 		//add fixture first
 		GameObject fixture = null;
 		Transform anchor = null;
+		
+		//modify y position if floor mounted
+		if (fixturePrefab != null && lightData != null && lightData.floorMounted)
+		{
+			//pos.y = room.floorHeight;
+			pos.y -= 2.7f;
+		}
+		
+		//add fixture
 		if (fixturePrefab != null)
 		{
 
-			Material emissionMat = null;
-			if (_emissionMats.ContainsKey(color))
-			{
-				emissionMat = _emissionMats[color];
-			}
-			else
-			{
-				emissionMat = new Material(Shader.Find("Standard"));
-				emissionMat.EnableKeyword("_EMISSION");
-				emissionMat.SetColor("_EmissionColor", color * 2f);
-				_emissionMats.Add(color, emissionMat);
-			}
-
 			fixture = Instantiate(fixturePrefab);
+				
 			fixture.transform.position = pos;
 			fixture.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
-			MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
-			Material[] mats = renderer.materials;
-			mats[^1] = emissionMat;
-			renderer.materials = mats;
 			
 			fixture.transform.SetParent(room.Ceiling.transform);
 
+			//find anchor for light source if available
 			LightAnchor lightAnchor = fixture.GetComponentInChildren<LightAnchor>();
 			if (lightAnchor != null)
 			{
 				anchor = lightAnchor.transform;
 			}
+			
+			//find renderer to modify emissive material
+			EmissiveMaterialAnchor emissiveMaterialAnchor = fixture.GetComponentInChildren<EmissiveMaterialAnchor>();
+			if (emissiveMaterialAnchor != null)
+			{
+				Material emissionMat = null;
+				if (_emissionMats.ContainsKey(color))
+				{
+					emissionMat = _emissionMats[color];
+				}
+				else
+				{
+					emissionMat = new Material(Shader.Find("Standard"));
+					emissionMat.EnableKeyword("_EMISSION");
+					emissionMat.SetColor("_EmissionColor", color * 2f);
+					_emissionMats.Add(color, emissionMat);
+				}
+				
+				MeshRenderer renderer = emissiveMaterialAnchor.GetComponent<MeshRenderer>();
+				Material[] mats = renderer.materials;
+				mats[^1] = emissionMat;
+				renderer.materials = mats;
+			}
+			
 		}
+		
 		
 		//then light source
 		GameObject lightSource = new GameObject("Point Light");

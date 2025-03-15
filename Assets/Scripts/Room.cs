@@ -27,6 +27,7 @@ public class Room : ScriptableObject
     public Vector3 zAxis;
     public Vector2 size;
     public Vector3 centerOfMass;
+    public float floorHeight;
     public List<Vector3> lightPosTemp = new();
     public Dictionary<LightingHelper.LightPositions, LightingHelper.Lights> customLights = new();
 
@@ -259,6 +260,18 @@ public class Room : ScriptableObject
                 
                 //calculate centroid of ceiling mesh
                 centerOfMass = Ceiling.transform.TransformPoint(ceilingMesh.bounds.center);
+            }
+        }
+
+        if (Floor != null)
+        {
+            Mesh floorMesh = Floor.GetComponent<MeshFilter>().sharedMesh;
+            if (floorMesh.isReadable)
+            {
+                //arbitrarily choose first vertex to get floor height
+                Vector3 floorOrigin = Floor.transform.TransformPoint(floorMesh.vertices[0]);
+
+                floorHeight = Floor.transform.TransformPoint(floorOrigin).y;
             }
         }
     }

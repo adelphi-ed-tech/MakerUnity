@@ -6959,7 +6959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bloomShader: {fileID: 4800000, guid: 15055f46bc69444c8a4af749e6c3bda3, type: 3}
-  bloomScale: 0.5
+  bloomScale: 0.85
   threshold: 2
   bloomRadius: 4
 --- !u!1 &971346630 stripped
@@ -15970,6 +15970,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 491675dc5b37645899cfa6dc6873cf46, type: 2}
   - {fileID: 11400000, guid: f82a0b7123bbd4cbdb0df048bdeb8488, type: 2}
   - {fileID: 11400000, guid: d1a5db934e0054985ba286e0db311be3, type: 2}
+  - {fileID: 11400000, guid: 3d1439bfed9b542d183294c3bf9cbbab, type: 2}
   roomManager: {fileID: 70514481}
   fogCam: {fileID: 361842038}
   fogMapShader: {fileID: 4800000, guid: 2d690831b60044378b7c09c0eb535923, type: 3}
