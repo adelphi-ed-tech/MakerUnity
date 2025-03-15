@@ -24,6 +24,8 @@ public class LightingHelper : MonoBehaviour
     public bool randomizeMoods;
     
 	private const float lightOffsetFromCeilingAmount = -0.1f;
+
+	private Dictionary<Color, Material> _emissionMats = new();
     
     //#mood hook to auto-generate enum
 	public enum Moods
@@ -148,11 +150,7 @@ public class LightingHelper : MonoBehaviour
 		room.lightPosTemp.Clear();
 		for (int i = room.Ceiling.transform.childCount - 1; i >= 0; i--)
 		{
-			GameObject child = room.Ceiling.transform.GetChild(i).gameObject;
-			if (child.GetComponent<Light>() != null)
-			{
-				GameObject.Destroy(room.Ceiling.transform.GetChild(i).gameObject);
-			}
+			GameObject.Destroy(room.Ceiling.transform.GetChild(i).gameObject);
 		}
 		
 	    float gridSize = Mathf.Sqrt(1f / mood.lightSourceDensity);
@@ -171,36 +169,9 @@ public class LightingHelper : MonoBehaviour
 		    }
 	    }
 
-	    Material emissionMat = new Material(Shader.Find("Standard"));
-	    emissionMat.EnableKeyword("_EMISSION");
-	    emissionMat.SetColor("_EmissionColor", mood.lightColor);
-
 	    foreach (Vector3 pos in room.lightPosTemp)
 	    {
-		    GameObject pointLight = new GameObject("Point Light");
-		    pointLight.transform.position = pos + Vector3.down * lightOffsetFromCeilingAmount;
-		    pointLight.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
-		    pointLight.transform.SetParent(room.Ceiling.transform);
-		    
-		    Light light = pointLight.AddComponent<Light>();
-		    light.type = LightType.Point;
-		    Color col = mood.lightColor;
-		    col.a = room.roomIndex / 255f;
-		    light.color = col;
-		    light.range = mood.lightRadius;
-		    light.shadows = LightShadows.None;
-		    
-		    //mesh
-		    if (mood.lightFixture != null)
-		    {
-				GameObject fixture = Instantiate(mood.lightFixture, pointLight.transform);
-				fixture.transform.position = pointLight.transform.position + Vector3.up * lightOffsetFromCeilingAmount;
-				fixture.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
-				MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
-				Material[] mats = renderer.materials;
-				mats[^1] = emissionMat;
-				renderer.materials = mats;
-		    }
+		    AddLightSourceAtPosition(room, mood.lightFixture, mood.lightColor, mood.lightRadius, pos);
 	    }
 
 	    foreach (LightPositions pos in room.customLights.Keys)
@@ -218,60 +189,96 @@ public class LightingHelper : MonoBehaviour
 	    switch (position)
 	    {
 		    case LightPositions.North:
-			    pos = room.centerOfMass + room.zAxis * room.size.y * 0.25f;
+			    pos = room.centerOfMass + room.zAxis * (room.size.y * 0.25f);
 			    break;
 		    case LightPositions.East:
-			    pos = room.centerOfMass + room.xAxis * room.size.x * 0.25f;
+			    pos = room.centerOfMass + room.xAxis * (room.size.x * 0.25f);
 			    break;
 		    case LightPositions.South:
-			    pos = room.centerOfMass - room.zAxis * room.size.y * 0.25f;
+			    pos = room.centerOfMass - room.zAxis * (room.size.y * 0.25f);
 			    break;
 		    case LightPositions.West:
-			    pos = room.centerOfMass - room.xAxis * room.size.x * 0.25f;
+			    pos = room.centerOfMass - room.xAxis * (room.size.x * 0.25f);
 			    break;
 	    }
-	    
-		GameObject customLight = new GameObject("Custom light");
-		float customLightOffset = lightOffsetFromCeilingAmount + lightData.verticalOffsetFromCeiling;
-		customLight.transform.position = pos + Vector3.down * customLightOffset;
-		customLight.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
-		customLight.transform.SetParent(room.Ceiling.transform);
-		customLight.transform.forward = Vector3.down;
 		
-		Light light = customLight.AddComponent<Light>();
-		light.type = lightData.type;
-		switch (light.type)
+	    AddLightSourceAtPosition(room, lightData.fixture, lightData.color, lightData.range, pos, lightData);
+    }
+
+    void AddLightSourceAtPosition(Room room, GameObject fixturePrefab, Color color, float range,
+	    Vector3 pos, CustomLight lightData = null)
+    {
+		//add fixture first
+		GameObject fixture = null;
+		Transform anchor = null;
+		if (fixturePrefab != null)
 		{
-			case LightType.Spot:
-				light.spotAngle = lightData.spotAngle;
-				break;
-		}
-		Color col = lightData.color;
-		col.a = room.roomIndex / 255f;
-		light.color = col;
-		light.range = lightData.range;
-		light.shadows = LightShadows.None;
-		
-		//mesh
-		if (lightData.fixture != null)
-		{
-			Material emissionMat = new Material(Shader.Find("Standard"));
-			emissionMat.EnableKeyword("_EMISSION");
-			emissionMat.SetColor("_EmissionColor", lightData.color);
-	    
-			GameObject fixture = Instantiate(lightData.fixture);
-			fixture.transform.position = customLight.transform.position + Vector3.up * customLightOffset;
-			fixture.transform.SetParent(customLight.transform);
+
+			Material emissionMat = null;
+			if (_emissionMats.ContainsKey(color))
+			{
+				emissionMat = _emissionMats[color];
+			}
+			else
+			{
+				emissionMat = new Material(Shader.Find("Standard"));
+				emissionMat.EnableKeyword("_EMISSION");
+				emissionMat.SetColor("_EmissionColor", color * 2f);
+				_emissionMats.Add(color, emissionMat);
+			}
+
+			fixture = Instantiate(fixturePrefab);
+			fixture.transform.position = pos;
+			fixture.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
 			MeshRenderer renderer = fixture.GetComponent<MeshRenderer>();
 			Material[] mats = renderer.materials;
 			mats[^1] = emissionMat;
 			renderer.materials = mats;
+			
+			fixture.transform.SetParent(room.Ceiling.transform);
 
-			if (light.type == LightType.Point && lightData.pointCookie != null)
+			LightAnchor lightAnchor = fixture.GetComponentInChildren<LightAnchor>();
+			if (lightAnchor != null)
 			{
-				light.cookie = lightData.pointCookie;
+				anchor = lightAnchor.transform;
 			}
 		}
+		
+		//then light source
+		GameObject lightSource = new GameObject("Point Light");
+		lightSource.transform.position = pos + Vector3.down * lightOffsetFromCeilingAmount;
+		lightSource.transform.rotation = Quaternion.LookRotation(room.zAxis, Vector3.up);
+		if (fixture == null)
+		{
+			lightSource.transform.SetParent(room.Ceiling.transform);
+		}
+		else
+		{
+			if (anchor != null)
+			{
+				lightSource.transform.position = anchor.position;
+				lightSource.transform.rotation = anchor.rotation;
+			}
+			lightSource.transform.SetParent(fixture.transform);
+		}
+		
+		//light settings
+		Light light = lightSource.AddComponent<Light>();
+		light.type = lightData == null ? LightType.Point : lightData.type;
+		if (light.type == LightType.Spot)
+		{
+			light.spotAngle = lightData.spotAngle;
+		}
+		else if (light.type == LightType.Point && lightData != null && lightData.pointCookie != null)
+		{
+			light.cookie = lightData.pointCookie;
+		}
+		Color col = color;
+		//prevent light bleed by encoding room index in alpha channel. See DeferredLighting.shader
+		col.a = room.roomIndex / 255f;
+		light.color = col;
+		light.range = range;
+		light.shadows = LightShadows.None;
     }
 
     public void UpdateFog()

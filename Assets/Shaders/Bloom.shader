@@ -1,6 +1,7 @@
 Shader "Hidden/Bloom"
 CGINCLUDE
 int _BloomRadius;
+float _Threshold;
 ENDCG
 {
     Properties
@@ -45,7 +46,7 @@ ENDCG
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                if(col.r > 1 || col.b > 1 || col.g > 1)
+                if(col.r > _Threshold || col.b > _Threshold || col.g > _Threshold)
                 {
                     return col;
                 }

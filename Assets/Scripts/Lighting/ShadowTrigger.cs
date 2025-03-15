@@ -11,7 +11,7 @@ public class ShadowTrigger : MonoBehaviour
         {
             foreach (Transform t in room.Ceiling.transform)
             {
-                Light light = t.GetComponent<Light>();
+                Light light = t.GetComponentInChildren<Light>();
                 if (light != null)
                 {
                     light.shadows = room.mood.castShadows ? LightShadows.Hard : LightShadows.None;

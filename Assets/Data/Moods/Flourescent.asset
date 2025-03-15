@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Flourescent
   m_EditorClassIdentifier: 
   specularColor: {r: 0.26415092, g: 0.21057314, b: 0.21057314, a: 0}
-  smoothness: 0.446
+  smoothness: 0.138
   ambientColor: {r: 0.3490566, g: 0.31893277, b: 0.21569064, a: 0}
   lightSourceDensity: 0.08
   lightColor: {r: 0.990566, g: 0.91844857, b: 0.7429245, a: 0}

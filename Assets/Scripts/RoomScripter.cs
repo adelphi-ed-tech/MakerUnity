@@ -218,6 +218,7 @@ public class RoomScripter : MonoBehaviour
         Room443.SetAllWallsTexture(textures.water);
         Room443.SetFloorTexture(textures.cobblestone);
         Room443.SetCeilingTexture(textures.sand);
+        Room443.SetMood(Moods.Misty);
         Room443.AddLight(Lights.Disco, LightPositions.Center);
 
         // Room 444
