@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Moods = LightingHelper.Moods;
 
 [CreateAssetMenu(menuName = "Classrooms")]
 public class Room : ScriptableObject
@@ -15,15 +17,50 @@ public class Room : ScriptableObject
     private Renderer FloorRenderer;
     private List<Renderer> WallRenderers;
     private AudioSource AudioSource;
+    public Mood mood;
+    public int moodIndex;
+    public int roomIndex;
+    
+    //frame of reference
+    public Vector3 origin;
+    public Vector3 xAxis;
+    public Vector3 zAxis;
+    public Vector2 size;
+    public Vector3 centerOfMass;
+    public float floorHeight;
+    public List<Vector3> lightPosTemp = new();
+    public Dictionary<LightingHelper.LightPositions, LightingHelper.Lights> customLights = new();
 
-    public void Setup(GameObject floor, GameObject ceiling, List<GameObject> walls, GameObject collider)
+    public void Setup(GameObject floor, GameObject ceiling, List<GameObject> walls, GameObject collider, int index)
     {
         Floor = floor;
         Ceiling = ceiling;
         Walls = walls;
         Collider = collider;
+        
+        roomIndex = index;
 
         InitializeRenderers();
+        
+        CalculateLocalBoundingBox();
+
+        if (LightingHelper.Instance.randomizeMoods)
+        {
+            // temp - set to a random mood on start
+            int numMoods = Enum.GetNames(typeof(Moods)).Length;
+            Moods randomMood = (Moods)UnityEngine.Random.Range(0, numMoods);
+            SetMood(randomMood);
+        }
+        else
+        {
+            SetMood(Moods.Default);
+        }
+
+        if (Collider != null)
+        {
+            ShadowTrigger st = Collider.gameObject.AddComponent<ShadowTrigger>();
+            st.room = this;
+        }
     }
 
     private void InitializeRenderers()
@@ -76,18 +113,13 @@ public class Room : ScriptableObject
 
         if (myTexture != null)
         {
-            // Create new material
-            Material material = new Material(Shader.Find("Standard"));
-            material.mainTexture = myTexture;
-
-            if (rend != null)
+            if (rend != null && rend.material != null)
             {
-                // Assign new material to renderer
-                rend.material = material;
+                rend.material.mainTexture = myTexture;
             }
             else
             {
-                Debug.LogError("Renderer Component not found");
+                Debug.LogError("Renderer Component not found or material missing");
             }
         }
         else
@@ -138,7 +170,110 @@ public class Room : ScriptableObject
                 instance.transform.SetLocalPositionAndRotation(floorCenter, Quaternion.Euler(0, 0, 0));
             }
         }
+    }
 
+    //helper method that lets folks set mood by referencing the Moods enum
+    //this is expected to be the main entry point
+    public void SetMood(LightingHelper.Moods mood)
+    {
+        SetMood(LightingHelper.Instance.GetMood(mood));
+    }
+    
+    public void SetMood(Mood mood)
+    {
+        this.mood = mood;
+        int moodIndex = LightingHelper.Instance.GetMoodIndex(mood);
+        SendMoodIndexToGpu(moodIndex);
+        
+        LightingHelper.Instance.SpawnPointLights(this, mood);
+        LightingHelper.Instance.SpawnParticles(this, mood);
+        
+        //note that remaining effects like ambient light and fog are managed per mood
+        //ambient is automatic
+        //fog will be updated as long as the user calls LightingHelper.UpdateFog at the end of room setup
+    }
+    
+    private void SendMoodIndexToGpu(int index)
+    {
+        moodIndex = index;
+        if (FloorRenderer != null)
+        {
+            FloorRenderer.material.SetInt("_MoodIndex", moodIndex);
+            FloorRenderer.material.SetInt("_RoomIndex", roomIndex);
+        }
+        if(CeilingRenderer != null)
+        {
+            CeilingRenderer.material.SetInt("_MoodIndex", moodIndex);
+            CeilingRenderer.material.SetInt("_RoomIndex", roomIndex);
+        }
+        foreach(Renderer wallRenderer in WallRenderers)
+        {
+            wallRenderer.material.SetInt("_MoodIndex", moodIndex);
+            wallRenderer.material.SetInt("_RoomIndex", roomIndex);
+        }
+    }
+
+    public void AddLight(LightingHelper.Lights lightType, LightingHelper.LightPositions position)
+    {
+        if (!customLights.ContainsKey(position))
+        {
+            customLights.Add(position, lightType);
+            LightingHelper.Instance.AddLight(this, lightType, position);
+        }
+        else
+        {
+            Debug.LogError("Cannot add two lights in same position for a single room");
+        }
+    }
+
+
+    // this method will help determine axis-aligned bounding box for the room
+    // and will be used to place lights and other things
+    // It is somewhat complicated b/c geometry has a single origin, same orientation, and scale x100
+    // Uses ceiling mesh to determine position, orientation, and scale
+    void CalculateLocalBoundingBox()
+    {
+        if (Ceiling != null)
+        {
+            Mesh ceilingMesh = Ceiling.GetComponent<MeshFilter>().sharedMesh;
+
+            if (ceilingMesh.isReadable)
+            {
+                //arbitrarily choose first vertex as origin
+                origin = Ceiling.transform.TransformPoint(ceilingMesh.vertices[0]);
+                //arbitrarily choose second vertex as x-axis
+                Vector3 next = Ceiling.transform.TransformPoint(ceilingMesh.vertices[1]);
+                
+                xAxis = (next - origin).normalized;
+                zAxis = Vector3.Cross(xAxis, Vector3.up).normalized;
+
+                size = Vector2.zero;
+                foreach(Vector3 vert in ceilingMesh.vertices)
+                {
+                    Vector3 globalPoint = Ceiling.transform.TransformPoint(vert);
+                    Vector3 localVector = globalPoint - origin;
+                    Vector3 xProject = Vector3.Project(localVector, xAxis);
+                    size.x = Mathf.Max(size.x, xProject.magnitude);
+                    Vector3 zProject = Vector3.Project(localVector, zAxis);
+                    size.y = Mathf.Max(size.y, zProject.magnitude);
+                }
+                
+                //calculate centroid of ceiling mesh
+                centerOfMass = Ceiling.transform.TransformPoint(ceilingMesh.bounds.center);
+            }
+        }
+
+        if (Floor != null)
+        {
+            Mesh floorMesh = Floor.GetComponent<MeshFilter>().sharedMesh;
+            if (floorMesh.isReadable)
+            {
+                //arbitrarily choose first vertex to get floor height
+                Vector3 floorOrigin = Floor.transform.TransformPoint(floorMesh.vertices[0]);
+
+                floorHeight = Floor.transform.TransformPoint(floorOrigin).y;
+            }
+        }
     }
 }
 

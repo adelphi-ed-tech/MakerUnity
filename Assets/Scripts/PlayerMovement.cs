@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
 
     Rigidbody rb;
+    public PlayerCam playerCamera;
 
     void Start()
     {
@@ -23,6 +24,10 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (playerCamera.debug)
+        {
+            return;
+        }
         MyInput();
     }
 

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0424d58298d8d485186defeecdd8d8f4, type: 3}
+  m_Name: FloorLamp
+  m_EditorClassIdentifier: 
+  fixture: {fileID: 6863715932597340409, guid: 4f2fb183aa459455394587d0e955fa2f, type: 3}
+  type: 0
+  color: {r: 0.9811321, g: 0.94857734, b: 0.8284087, a: 0}
+  range: 10
+  castsShadows: 1
+  floorMounted: 1
+  verticalOffsetFromCeiling: 0
+  spotAngle: 90
+  pointCookie: {fileID: 0}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a7b4800156a4700bf28c271339eeb9, type: 3}
+  m_Name: Default
+  m_EditorClassIdentifier: 
+  specularColor: {r: 0.23584908, g: 0.23584908, b: 0.23584908, a: 0}
+  smoothness: 0.254
+  ambientColor: {r: 0.4056604, g: 0.4037469, b: 0.4037469, a: 0}
+  lightSourceDensity: 0.076
+  lightColor: {r: 1, g: 1, b: 1, a: 0}
+  lightRadius: 8.65
+  castShadows: 1
+  lightFixture: {fileID: 7603295526964027914, guid: a48232a963e524953a19a2487f29efa6, type: 3}
+  fogColor: {r: 0, g: 0, b: 0, a: 0}
+  particlePrefab: {fileID: 0}
+  particleDensity: 0.22

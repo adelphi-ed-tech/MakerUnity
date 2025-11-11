@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67a7b4800156a4700bf28c271339eeb9, type: 3}
+  m_Name: Misty
+  m_EditorClassIdentifier: 
+  specularColor: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 0}
+  smoothness: 0.316
+  ambientColor: {r: 0.06505874, g: 0.18194832, b: 0.3207547, a: 0}
+  lightSourceDensity: 0.076
+  lightColor: {r: 0, g: 0.98080873, b: 1, a: 0}
+  lightRadius: 7.86
+  fogColor: {r: 0.19081523, g: 0.3895689, b: 0.6037736, a: 0.09803922}
+  particlePrefab: {fileID: 2612838236286074194, guid: 5fd54d2eb41f84ab3a7e94b9bf164dbf, type: 3}
+  particleDensity: 0.22

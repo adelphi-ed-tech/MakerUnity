@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Moods = LightingHelper.Moods;
+using Lights = LightingHelper.Lights;
+using LightPositions = LightingHelper.LightPositions;
 
 public class RoomScripter : MonoBehaviour
 {
@@ -20,6 +23,7 @@ public class RoomScripter : MonoBehaviour
         Room403.SetCeilingTexture(textures.water);
         Room403.SetSoundEffect(sounds.talkingStudents);
         Room403.SpawnSpheres("red", 5);
+        Room403.SetMood(Moods.Misty);
 
 
         // Room 405
@@ -27,7 +31,9 @@ public class RoomScripter : MonoBehaviour
         Room405.SetAllWallsTexture(textures.brick);
         Room405.SetFloorTexture(textures.grass);
         Room405.SetCeilingTexture(textures.water);
-
+        Mood newMood = LightingHelper.Instance.CreateMood(Color.red, 1f, Color.magenta, 0.5f, 5f, Color.yellow,
+            new Color(0.5f, 0.5f, 0.5f, 0.1f), null, 0, true);
+        Room405.SetMood(newMood);
 
         // Room 406
         Room Room406 = roomManager.GetRoomByName("406");
@@ -131,6 +137,7 @@ public class RoomScripter : MonoBehaviour
         Room427.SetAllWallsTexture(textures.wood);
         Room427.SetFloorTexture(textures.lava);
         Room427.SetCeilingTexture(textures.sand);
+        Room427.SetMood(Moods.Default);
 
 
         // Room 430
@@ -145,6 +152,7 @@ public class RoomScripter : MonoBehaviour
         Room431.SetAllWallsTexture(textures.wood);
         Room431.SetFloorTexture(textures.lava);
         Room431.SetCeilingTexture(textures.sand);
+        Room431.SetMood(Moods.Misty);
 
 
         // Room 432
@@ -159,6 +167,7 @@ public class RoomScripter : MonoBehaviour
         Room433.SetAllWallsTexture(textures.wood);
         Room433.SetFloorTexture(textures.lava);
         Room433.SetCeilingTexture(textures.sand);
+        Room433.SetMood(Moods.Emblazen);
 
 
         // Room 434
@@ -166,6 +175,7 @@ public class RoomScripter : MonoBehaviour
         Room434.SetAllWallsTexture(textures.wood);
         Room434.SetFloorTexture(textures.lava);
         Room434.SetCeilingTexture(textures.sand);
+        Room434.SetMood(Moods.Flourescent);
 
 
         // Room 435
@@ -173,6 +183,7 @@ public class RoomScripter : MonoBehaviour
         Room435.SetAllWallsTexture(textures.wood);
         Room435.SetFloorTexture(textures.lava);
         Room435.SetCeilingTexture(textures.sand);
+        Room435.SetMood(Moods.Darkness);
 
 
         // Room 436
@@ -187,7 +198,13 @@ public class RoomScripter : MonoBehaviour
         Room439.SetAllWallsTexture(textures.wood);
         Room439.SetFloorTexture(textures.lava);
         Room439.SetCeilingTexture(textures.sand);
-
+        Room439.SetMood(Moods.Cozy);
+        Room439.AddLight(Lights.Spot, LightPositions.Center);
+        Room439.AddLight(Lights.Spot, LightPositions.North);
+        Room439.AddLight(Lights.Spot, LightPositions.East);
+        Room439.AddLight(Lights.Spot, LightPositions.South);
+        Room439.AddLight(Lights.Spot, LightPositions.West);
+        Room439.AddLight(Lights.FloorLamp, LightPositions.NorthWest);
 
 
         // Room 441
@@ -202,6 +219,8 @@ public class RoomScripter : MonoBehaviour
         Room443.SetAllWallsTexture(textures.water);
         Room443.SetFloorTexture(textures.cobblestone);
         Room443.SetCeilingTexture(textures.sand);
+        Room443.SetMood(Moods.Misty);
+        Room443.AddLight(Lights.Disco, LightPositions.Center);
 
         // Room 444
         Room Room444 = roomManager.GetRoomByName("444");
@@ -275,6 +294,9 @@ public class RoomScripter : MonoBehaviour
         Thrift.SetCeilingTexture(textures.ice);
         Thrift.SetSoundEffect(sounds.talkingStudents);
         Thrift.SpawnSpheres("green", 2);
+        
+        //update fog
+        LightingHelper.Instance.UpdateFog();
     }
 
 }

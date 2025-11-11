@@ -10,6 +10,8 @@ public class RoomManager : MonoBehaviour
     void Start()
     {
         InitializeRooms();
+        
+        InitializeFog();
     }
 
     void InitializeRooms()
@@ -66,7 +68,7 @@ public class RoomManager : MonoBehaviour
         if (floor != null && ceiling != null && walls.Count > 0 && collider != null)
         {
             Room room = ScriptableObject.CreateInstance<Room>();
-            room.Setup(floor, ceiling, walls, collider);
+            room.Setup(floor, ceiling, walls, collider, roomDictionary.Count);
             roomDictionary[roomName] = room;
         }
         else
@@ -84,6 +86,74 @@ public class RoomManager : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public List<Room> GetRoomList()
+    {
+        //extract rooms from roomDictionary.values
+        List<Room> roomList = new List<Room>();
+        foreach (Room room in roomDictionary.Values)
+        {
+            roomList.Add(room);
+        }
+        return roomList;
+    }
+
+    void InitializeFog()
+    {
+        LightingHelper.Instance.UpdateFog();
+    }
+
+    //use this to visualize some data about each room
+    private void OnDrawGizmos()
+    {
+        if (roomDictionary == null)
+        {
+            return;
+        }
+        foreach (Room room in roomDictionary.Values)
+        {
+            if (room.Ceiling != null)
+            {
+                Mesh ceilingMesh = room.Ceiling.GetComponent<MeshFilter>().sharedMesh;
+                for(int i = 0; i < ceilingMesh.vertices.Length; i++)
+                {
+                    float i01 = (float)i / (ceilingMesh.vertices.Length - 1);
+                    i01 *= 0.5f;
+                    Color col = Color.HSVToRGB(i01, 1, 1);
+                    Gizmos.color = col;
+                    Vector3 globalPoint = room.Ceiling.transform.TransformPoint(ceilingMesh.vertices[i]);
+                    Gizmos.DrawSphere(globalPoint, 0.2f);
+                }
+
+                Vector3 origin = room.Ceiling.transform.TransformPoint(ceilingMesh.vertices[0]);
+                Vector3 next = room.Ceiling.transform.TransformPoint(ceilingMesh.vertices[1]);
+                Vector3 localRight = (next - origin).normalized;
+                Vector3 localUp = Vector3.Cross(localRight, Vector3.up).normalized;
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(origin + Vector3.up * 2, origin + Vector3.up * 2 + localRight);
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(origin + Vector3.up * 2, origin + Vector3.up * 2 + localUp);
+                
+                Gizmos.color = Color.white;
+                Gizmos.DrawSphere(room.centerOfMass, 0.5f);
+                
+                if (room.size != Vector2.zero)
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawLine(room.origin + Vector3.up, room.origin + room.xAxis * room.size.x + Vector3.up);
+                    Gizmos.DrawLine(room.origin + Vector3.up, room.origin + room.zAxis * room.size.y + Vector3.up);
+                    Gizmos.DrawLine(room.origin + room.xAxis * room.size.x + Vector3.up, room.origin + room.xAxis * room.size.x + room.zAxis * room.size.y + Vector3.up);
+                    Gizmos.DrawLine(room.origin + room.zAxis * room.size.y + Vector3.up, room.origin + room.xAxis * room.size.x + room.zAxis * room.size.y + Vector3.up);
+                }
+
+                Gizmos.color = Color.yellow;
+                foreach (Vector3 lp in room.lightPosTemp)
+                {
+                    Gizmos.DrawSphere(lp, 0.5f);
+                }
+            }
         }
     }
 }
